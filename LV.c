@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<set>
+#include<vector>
 using namespace std;
 
 #define  MEM_SIZE 10
@@ -16,8 +17,7 @@ int main()
     cout<<"请输入程序需要的页号："<<endl;
    
     //cout<<">>:输入0 选择缺页率模式";
-    int mem[MEM_SIZE];
-    for(int i=0;i<MEM_SIZE;i++)mem[i]=-1;
+    vector<int>mem;
     
     bool find=false;
     int t1=0;
@@ -29,30 +29,16 @@ int main()
            myset.insert(n);
            t2++;
            find=false;
-           for(int i=0;i<MEM_SIZE;i++)
+           for( vector<int>::iterator i=mem.begin();i!=mem.end();i++)
            {
-                  if(n==mem[i])
+                  if(n==*i)
                   {
                                
                      cout<<"内存中存在:"<<n<<endl;
                      find =true;            
                    }  
            }
-           if(find)
-           {
-              continue;     
-           }
-           for(int i=0;i<MEM_SIZE;i++)
-           {
-               if(mem[i]==-1)
-               {
-                   mem[i]=n;
-                   
-                   find=true; 
-                   
-                   break;          
-               }    
-           }
+         
            if (find) continue;
        
             int aa[MEM_SIZE];
@@ -70,24 +56,31 @@ int main()
                                                
                         }    
                    myset.clear();    
-                   for(int i=0;i<MEM_SIZE;i++)
+                   int rr=-1;
+                   for( vector<int>::iterator i=mem.begin();i!=mem.end();i++)
                    {     bool findmem=false;
+                        rr++;
                          for(int j=0;j<MEM_SIZE;j++)
                          {
-                              if(mem[i]==aa[j])
+                              if(*i==aa[j])
                               {
                                findmem=true;
                                break;                                                
                               }
                                   
                          }
-                         if(!findmem) mem[i]=-1;
-                             
-                   }        
-                        
-                        
+                         if(!findmem) mem.erase(i);
+          
+                   }                          
+                   for(int i=0;i<MEM_SIZE;i++)
+                   {
+                    if(mem[i]==-1)
+                     {
+                       mem[i]=n;      
+                     }    
+                   }                                                                
             }
-           
+       
     }
     return 0;   
 } 
