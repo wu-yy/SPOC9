@@ -36,3 +36,5 @@ memlayout.h 定义的 KERNEL BASE 是 #define KERNBASE            0xC0000000 。
 SECTIONS {
 /* Load the kernel at this address: "." means the current address */
 . = 0xC0100000;    <----说明了编译出的kernel执行文件的虚拟内核的起始地址为0xC0100000，这个地址就是 kern_entry 函数（位于kern/init/entry.S）的起始地址。
+
+
