@@ -38,3 +38,28 @@ SECTIONS {
 . = 0xC0100000;    <----说明了编译出的kernel执行文件的虚拟内核的起始地址为0xC0100000，这个地址就是 kern_entry 函数（位于kern/init/entry.S）的起始地址。
 
 
+pte2page只是pa2page的一个封装而已，用哪一个意义上都是一样的。
+
+最先匹配是说空闲分区列表按照地址顺序排列，可是lab2中的answer好像是每次把free后把空闲的直接加到列表头了
+
+get_pte中, 在页表不存在((pgdir[pdx] & PTE_P) == 0)的时候需要分配空间放置页表并重新填写页目录项:
+0xC0000000为KERNBASE, 为虚拟地址空间中的内核基址, 在ucore中内核地址仅做一个平移映射, 所以物理地址加0xC0000000就是其虚拟地址, 至于0xC0000000这个值是人为设定的, 没有特别原因, 不同操作系统可能有不同的.
+虚拟地址到物理地址的转换是由硬件完成的.
+
+lab2 /mm/mmu.h
+/* page table/directory entry flags */
+#define PTE_P           0x001                   // Present
+#define PTE_W           0x002                   // Writeable
+#define PTE_U           0x004                   // User
+#define PTE_PWT         0x008                   // Write-Through
+#define PTE_PCD         0x010                   // Cache-Disable
+#define PTE_A           0x020                   // Accessed
+#define PTE_D           0x040                   // Dirty
+#define PTE_PS          0x080                   // Page Size
+#define PTE_MBZ         0x180                   // Bits must be zero
+#define PTE_AVAIL       0xE00                   // Available for software use
+PTE_PS是对pde说的，如果pde的PTE_PS位为1，那么pde中所存的就不是下一级页表，而是一张4M页的起始地址；也就是说，这是页的粒度不是4K，而是4M
+
+
+PG_reserved=1的页属于：已经被kernel code或一些全局变量占用了的内存，或者是不能用于一般读写的内存。 
+PG_reserved=0的页是可以用来alloc/free的内存。reserved的页不能被分配了,default_pmm就是一个pm_manager，用于管理以页为单位的空闲内存.
