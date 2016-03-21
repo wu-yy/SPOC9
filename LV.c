@@ -15,16 +15,19 @@ int main()
     cout<<"-------------缺页率------------"<<endl;
     cout<<"请输入程序需要的页号："<<endl;
    
-    cout<<">>";
-    int mem[10];
-    memset(mem,-1,sizeof(mem));
+    //cout<<">>:输入0 选择缺页率模式";
+    int mem[MEM_SIZE];
+    for(int i=0;i<MEM_SIZE;i++)mem[i]=-1;
+    
     bool find=false;
     int t1=0;
     int t2=-1;
     set<int>myset;
     while(cin>>n)
     {
-            t2++;
+           cout<<n<<endl;
+           myset.insert(n);
+           t2++;
            find=false;
            for(int i=0;i<MEM_SIZE;i++)
            {
@@ -44,14 +47,14 @@ int main()
                if(mem[i]==-1)
                {
                    mem[i]=n;
-                   find=true;           
+                   
+                   find=true; 
+                   
+                   break;          
                }    
            }
            if (find) continue;
-           
-           myset.insert(n);
-           
-           
+       
             int aa[MEM_SIZE];
             for(int i=0;i<MEM_SIZE;i++) aa[i]=-1;
             int r=0;
@@ -65,7 +68,8 @@ int main()
                               r++;
                               if(r>=MEM_SIZE) r=0;
                                                
-                        }        
+                        }    
+                   myset.clear();    
                    for(int i=0;i<MEM_SIZE;i++)
                    {     bool findmem=false;
                          for(int j=0;j<MEM_SIZE;j++)
